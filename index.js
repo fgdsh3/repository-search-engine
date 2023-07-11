@@ -5,6 +5,22 @@ function searchRepos() {
     let api;
     let repos;
     const search = document.querySelector('.search__input');
+    function findRepos() {
+      api = fetch(`https://api.github.com/search/repositories?q=${search.value}&per_page=${requestsCount}`)
+        .then((response) => {
+          return response.json();
+        })
+        .then((response) => {
+          if (searchList.innerHTML.length > 0) {
+            searchList.innerHTML = '';
+          }
+          repos = response.items;
+          repos.forEach((obj, index) => {
+            createSearchItem(obj, index)
+          })
+          return repos
+        })
+    }
 
     search.addEventListener('input', () => {
       let currTimeout;
@@ -15,24 +31,9 @@ function searchRepos() {
       else {
         currTimeout = setTimeout(() => {
           if (search.value[0] !== ' ' && search.value.length !== 0) {
-            api = fetch(`https://api.github.com/search/repositories?q=${search.value}&per_page=${requestsCount}`)
-              .then((response) => {
-                return response.json();
-              })
-              .then((response) => {
-                if (searchList.innerHTML.length > 0) {
-                  searchList.innerHTML = '';
-                }
-                console.log(response);
-                repos = response.items;
-                console.log(repos);
-                repos.forEach((obj, index) => {
-                  createSearchItem(obj, index)
-                })
-                return repos
-              })
+            findRepos.apply(this, arguments)
           }
-        }, 500);
+        }, 400);
       }
     })
 
