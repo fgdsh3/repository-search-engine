@@ -6,7 +6,7 @@ function searchRepos() {
     let repos;
     const search = document.querySelector('.search__input');
 
-    search.addEventListener('change', () => {
+    search.addEventListener('input', () => {
       let currTimeout;
       clearTimeout(currTimeout);
       if (search.value.length === 0) {
