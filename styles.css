@@ -112,7 +112,7 @@ body {
   top: 50%;
   transform: translateY(-50%);
   right: 34px;
-  background-image: url(images/cross-red.svg);
+  background-image: url(./images/cross-red.svg);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
