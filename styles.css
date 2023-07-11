@@ -4,9 +4,16 @@ body {
 }
 
 input,
-button {
+button,
+dd,
+dl,
+dt {
   padding: 0;
   margin: 0;
+}
+
+li {
+  list-style-type: none;
 }
 
 *,
@@ -17,6 +24,8 @@ button {
 
 body {
   margin: 0;
+  color: #000;
+  font-family: Roboto;
   background-color: #C4C4C4;
 }
 
@@ -27,6 +36,7 @@ body {
 .search__input {
   display: block;
   margin: 62px auto 45px;
+  padding: 0 13px;
   width: 500px;
   height: 61px;
   font-family: Roboto;
@@ -36,7 +46,6 @@ body {
   line-height: normal;
   background-color: #fff;
   color: #000;
-  padding-left: 13px;
   border: none;
 }
 
@@ -53,14 +62,59 @@ body {
   margin: 0 auto;
   padding: 0;
   width: 500px;
+  z-index: 5;
 }
 
 .search__list-item {
   width: 500px;
-  height: 44px;
+  min-height: 44px;
+  padding: 0 13px;
   border: 2px solid #000;
   background: #E3E3E3;
   font-size: 30px;
-  list-style-type: none;
+  cursor: pointer;
+  transition: all .3s;
+}
+
+.search__list-item:hover {
+  background-color: #65CDF9;
+}
+
+.repositories {
+  width: 500px;
+  margin: 0 auto;
+}
+
+.repositories__dl {
+  position: relative;
+  min-height: 100px;
+  padding: 16px 8px;
+  border: 1px solid #000;
+  background-color: #E27BEB;
+}
+
+.repositories__decr-box {
+  display: flex;
+  justify-content: start;
+  gap: 5px;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.repositories__btn {
+  position: absolute;
+  width: 42px;
+  height: 42px;
+  background: transparent;
+  border: none;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 34px;
+  background-image: url(/images/cross-red.svg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
   cursor: pointer;
 }
