@@ -32,7 +32,7 @@ function searchRepos() {
                 return repos
               })
           }
-        }, 0);
+        }, 500);
       }
     })
 
