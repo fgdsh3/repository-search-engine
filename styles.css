@@ -85,15 +85,7 @@ body {
   margin: 0 auto;
 }
 
-.repositories__dl {
-  position: relative;
-  min-height: 100px;
-  padding: 16px 8px;
-  border: 1px solid #000;
-  background-color: #E27BEB;
-}
-
-.repositories__decr-box {
+.repositories__list-item {
   display: flex;
   justify-content: start;
   gap: 5px;
@@ -102,6 +94,15 @@ body {
   font-weight: 400;
   line-height: normal;
 }
+
+.repositories__list {
+  position: relative;
+  min-height: 100px;
+  padding: 16px 8px;
+  border: 1px solid #000;
+  background-color: #E27BEB;
+}
+
 
 .repositories__btn {
   position: absolute;

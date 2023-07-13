@@ -1,115 +1,134 @@
-
-function searchRepos() {
-  try {
-    const requestsCount = 5;
-    let api;
-    let repos;
-    const search = document.querySelector('.search__input');
-
-    search.addEventListener('change', () => {
-      let currTimeout;
-      clearTimeout(currTimeout);
-      if (search.value.length === 0) {
-        searchList.innerHTML = '';
-      }
-      else {
-        currTimeout = setTimeout(() => {
-          if (search.value[0] !== ' ' && search.value.length !== 0) {
-            api = fetch(`https://api.github.com/search/repositories?q=${search.value}&per_page=${requestsCount}`)
-              .then((response) => {
-                return response.json();
-              })
-              .then((response) => {
-                if (searchList.innerHTML.length > 0) {
-                  searchList.innerHTML = '';
-                }
-                console.log(response);
-                repos = response.items;
-                console.log(repos);
-                repos.forEach((obj, index) => {
-                  createSearchItem(obj, index)
-                })
-                return repos
-              })
-          }
-        }, 0);
-      }
-    })
-
-    const searchList = document.querySelector('.search__list');
-
-    function createSearchItem(obj, index) {
-      let fragment = new DocumentFragment();
-      let searchListItem = document.createElement('li');
-      searchListItem.innerText = `${obj.name}`
-      searchListItem.classList.add('search__list-item');
-      searchListItem.classList.add(`search__list-item${index}`);
-      searchListItem.append();
-      fragment.append(searchListItem);
-      searchList.append(fragment);
-    }
-
-    searchList.addEventListener('click', (elem) => {
-      target = elem.target;
-      let targetIndex = target.className.match(/search__list-item[0-9]$/gmi).join('');
-      targetIndex = targetIndex[targetIndex.length - 1];
-      createReposItem(targetIndex)
-    })
-
-    function createReposItem(objIndex) {
-      let currObj = repos[objIndex];
-      let fragment = new DocumentFragment();
-      let reposItem = document.createElement('dl');
-      reposItem.classList.add('repositories__dl');
-      let dBox1 = document.createElement('div');
-      dBox1.classList.add('repositories__decr-box');
-      let name = document.createElement('dt');
-      name.classList.add('repositories__dt');
-      name.innerText = 'Name:';
-      dBox1.append(name);
-      let nameValue = document.createElement('dd');
-      nameValue.classList.add('repositories__dd');
-      nameValue.innerText = `${currObj.name}`;
-      dBox1.append(nameValue);
-      reposItem.append(dBox1);
-      let dBox2 = document.createElement('div');
-      dBox2.classList.add('repositories__decr-box');
-      let owner = document.createElement('dt');
-      owner.classList.add('repositories__dt');
-      owner.innerText = 'Owner:';
-      dBox2.append(owner);
-      let ownerValue = document.createElement('dd');
-      ownerValue.classList.add('repositories__dd');
-      ownerValue.innerText = `${currObj.owner.login}`;
-      dBox2.append(ownerValue);
-      reposItem.append(dBox2);
-      let dBox3 = document.createElement('div');
-      dBox3.classList.add('repositories__decr-box');
-      let stars = document.createElement('dt');
-      stars.classList.add('repositories__dt');
-      stars.innerText = 'Stars:';
-      dBox3.append(stars);
-      let starsCount = document.createElement('dd');
-      starsCount.classList.add('repositories__dd');
-      starsCount.innerText = `${currObj.stargazers_count}`;
-      dBox3.append(starsCount);
-      reposItem.append(dBox3);
-      let repoBtn = document.createElement('button');
-      repoBtn.classList.add('repositories__btn');
-      repoBtn.addEventListener('click', () => {
-        reposItem.remove();
-      })
-      reposItem.append(repoBtn);
-      fragment.append(reposItem);
-      let repositories = document.querySelector('.repositories');
-      repositories.append(fragment);
-      search.value = '';
-      searchList.innerHTML = '';
-    }
-  }
-  catch (error) {
-    console.log(error);
+function debounce(fn, ms) {
+  let currTimeout;
+  return function (...args) {
+    clearTimeout(currTimeout);
+    currTimeout = setTimeout(() => {
+      fn.apply(this, args);
+    }, ms);
   }
 }
 
-searchRepos()
+
+const requestsCount = 5;
+let repositories;
+const search = document.querySelector('.search__input');
+
+
+search.addEventListener('keyup', () => {
+  try {
+    const delayedGetRepos = debounce(getRepos, 400);
+    if (search.value.length === 0) {
+      searchList.innerHTML = '';
+    }
+    else {
+      if (search.value[0] !== ' ' && search.value.length !== 0) {
+        delayedGetRepos();
+      }
+    }
+  }
+  catch (error) {
+    console.log(error)
+  }
+})
+
+function getRepos() {
+  try {
+    const api = fetch(`https://api.github.com/search/repositories?q=${search.value}&per_page=${requestsCount}`)
+      .then((response) => {
+        return response.json();
+      })
+      .then((response) => {
+        if (searchList.innerHTML.length > 0) {
+          searchList.innerHTML = '';
+        }
+        repositories = response.items;
+        repositories.forEach((repository, index) => {
+          createSearchItem(repository, index)
+        })
+        return repositories;
+      })
+  }
+  catch (error) {
+    console.log(error)
+  }
+}
+
+const searchList = document.querySelector('.search__list');
+
+function createSearchItem(repository, index) {
+  try {
+    let fragment = new DocumentFragment();
+    let searchListItem = document.createElement('li');
+    searchListItem.innerText = `${repository.name}`
+    searchListItem.classList.add('search__list-item');
+    searchListItem.classList.add(`search__list-item${index}`);
+    fragment.append(searchListItem);
+    searchList.append(fragment);
+  }
+  catch (error) {
+    console.log(error)
+  }
+}
+
+searchList.addEventListener('click', (elem) => {
+  try {
+    target = elem.target;
+    let targetIndex = target.className.match(/search__list-item[0-9]$/gmi).join('');
+    targetIndex = targetIndex[targetIndex.length - 1];
+    createReposItem(targetIndex);
+  }
+  catch (error) {
+    console.log(error)
+  }
+})
+
+function createElement(tag, className) {
+  try {
+    const element = document.createElement(tag);
+    if (className) {
+      element.classList.add(className);
+    }
+    return element;
+  }
+  catch (error) {
+    console.log(error)
+  }
+}
+
+function createReposItem(targetIndex) {
+  try {
+    const currRepo = repositories[targetIndex];
+    const fragment = new DocumentFragment();
+    const reposItem = createElement('ul', 'repositories__list');
+
+    const name = createElement('li', 'repositories__list-item');
+    name.innerText = `Name: ${currRepo.name}`;
+    reposItem.append(name);
+
+    const owner = createElement('li', 'repositories__list-item');
+    owner.innerText = `Owner: ${currRepo.owner.login}`;
+    reposItem.append(owner);
+
+    const stars = createElement('li', 'repositories__list-item');
+    stars.innerText = `Stars: ${currRepo.stargazers_count}`;
+    reposItem.append(stars);
+
+
+    const repoBtn = document.createElement('button');
+    repoBtn.classList.add('repositories__btn');
+    repoBtn.addEventListener('click', () => {
+      reposItem.remove();
+    })
+
+    reposItem.append(repoBtn);
+    fragment.append(reposItem);
+    const reposBox = document.querySelector('.repositories');
+    reposBox.append(fragment);
+    search.value = '';
+    searchList.innerHTML = '';
+  }
+  catch (error) {
+    console.log(error)
+  }
+}
+
