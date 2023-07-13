@@ -14,44 +14,40 @@ let repositories;
 const search = document.querySelector('.search__input');
 
 
+const deferredGetRepos = debounce(async function getRepos() {
+  try {
+    const response = await fetch(`https://api.github.com/search/repositories?q=${search.value}&per_page=${requestsCount}`);
+    const responseJson = await response.json();
+    if (searchList.innerHTML.length > 0) {
+      searchList.innerHTML = '';
+    }
+    repositories = responseJson.items;
+    repositories.forEach((repository, index) => {
+      createSearchItem(repository, index);
+    })
+    return repositories;
+  }
+  catch (error) {
+    console.log(error);
+  }
+}, 500) 
+
 search.addEventListener('keyup', () => {
   try {
-    const delayedGetRepos = debounce(getRepos, 400);
     if (search.value.length === 0) {
       searchList.innerHTML = '';
     }
     else {
       if (search.value[0] !== ' ' && search.value.length !== 0) {
-        delayedGetRepos();
+        deferredGetRepos();
       }
     }
   }
   catch (error) {
-    console.log(error)
+    console.log(error);
   }
 })
 
-function getRepos() {
-  try {
-    const api = fetch(`https://api.github.com/search/repositories?q=${search.value}&per_page=${requestsCount}`)
-      .then((response) => {
-        return response.json();
-      })
-      .then((response) => {
-        if (searchList.innerHTML.length > 0) {
-          searchList.innerHTML = '';
-        }
-        repositories = response.items;
-        repositories.forEach((repository, index) => {
-          createSearchItem(repository, index)
-        })
-        return repositories;
-      })
-  }
-  catch (error) {
-    console.log(error)
-  }
-}
 
 const searchList = document.querySelector('.search__list');
 
@@ -78,7 +74,7 @@ searchList.addEventListener('click', (elem) => {
     createReposItem(targetIndex);
   }
   catch (error) {
-    console.log(error)
+    console.log(error);
   }
 })
 
@@ -91,7 +87,7 @@ function createElement(tag, className) {
     return element;
   }
   catch (error) {
-    console.log(error)
+    console.log(error);
   }
 }
 
@@ -128,7 +124,7 @@ function createReposItem(targetIndex) {
     searchList.innerHTML = '';
   }
   catch (error) {
-    console.log(error)
+    console.log(error);
   }
 }
 
